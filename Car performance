@@ -1,0 +1,11 @@
+class Car:
+    def __init__(self, model, max_speed, year):
+        self.model = model
+        self.max_speed = max_speed
+        self.year = year
+    def get_all(self):
+        return print('Модель машины =', self.model, '\n' 'Скорость машины =', self.max_speed, '\n' 'Год машины =', self.year)
+
+vehicle = Car("BMW", 220, 2015)
+
+vehicle.get_all()
