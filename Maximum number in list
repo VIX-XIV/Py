@@ -1,0 +1,8 @@
+def a ():
+    n = [14, 2, 6, 121, 22, 11, 100]
+    max = 0
+    for i in n:
+        if i > max:
+            max = i
+    return max
+print(a())
