@@ -1,0 +1,17 @@
+def common ():
+    a = [[1, 2, 33, 4, 4, 5, 0], [1, 1, 1, 2, 3, 0, 0]]
+    main_list1 = []
+    for x in a:
+        for n in x:
+            main_list1.append(n)
+
+    numb = main_list1[0]
+    max_numb = main_list1.count(numb)
+
+    for i in main_list1:
+        if main_list1.count(i) > max_numb:
+            numb = i
+            max_numb = main_list1.count(i)
+    return numb
+
+print(common())
