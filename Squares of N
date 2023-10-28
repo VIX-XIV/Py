@@ -1,0 +1,9 @@
+def q ():
+    n = int(input('Введите свое число: '))
+    a = []
+    for i in range(n+1):
+        a.append(i**2)
+        print('Квадрат числа - ', i, ' = ', i**2 )
+
+    return a
+print(q())
