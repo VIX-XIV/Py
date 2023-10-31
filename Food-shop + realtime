@@ -1,0 +1,36 @@
+import datetime
+class ItemNotFoundError(Exception):
+    def __init__(self, item_name):
+        super().__init__(f"Товара или количество запрашиваемого товара {item_name} нет в наличии.")
+
+class Warehouse:
+    def __init__(self, item_name, quantity):
+        self.item_name = item_name
+        self.items = {}
+        self.add_item(item_name, quantity)
+
+    def add_item(self, item_name, quantity):
+        if item_name in self.items:
+            self.items[item_name] += quantity
+        else:
+            self.items[item_name] = quantity
+
+    def purchase_item(self, item_name, quantity):
+        if item_name in self.items and self.items[item_name] >= quantity:
+            self.items[item_name] -= quantity
+            print(f"Покупка совершена! Товар - {item_name} в количестве {quantity} шт.")
+        else:
+            raise ItemNotFoundError(item_name)
+
+Warehouse1 = Warehouse('Хлеб', 20)
+Warehouse2 = Warehouse('Молоко', 30)
+Warehouse3 = Warehouse('Чипсы', 35)
+try:
+    Warehouse1.purchase_item('Хлеб', 11)
+    Warehouse2.purchase_item('Молоко', 30)
+    Warehouse3.purchase_item('Чипсы', 38)
+except ItemNotFoundError as Except:
+    print(Except)
+
+current_time = datetime.datetime.now()
+print("\n" f"Текущая дата и время: {current_time}")
