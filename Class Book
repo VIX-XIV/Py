@@ -1,0 +1,41 @@
+class Book:
+    name = []
+    aut = []
+    year = []
+
+    def __init__(self, title, author, publication_year):
+        self.title = title
+        self.author = author
+        self.publication_year = publication_year
+        self.books = [title, author, publication_year]
+
+
+    def add_name(self):
+        self.name.append(self.title)
+
+    def add_author(self):
+            self.aut.append(self.author)
+
+    def add_year(self):
+                self.year.append(self.publication_year)
+
+
+    #def add_name_books(self):
+        #self.name_book_list.append(self.title)
+
+book1 = Book("Harry Potter", "Joanne Rowling", "1997")
+book2 = Book("War and Peace", "Lev Tolstoy", "1863")
+
+book1.add_name()
+book1.add_author()
+book1.add_year()
+
+book2.add_name()
+book2.add_author()
+book2.add_year()
+
+print(book1.name)
+print(book1.aut)
+print(book1.year)
+
+print(book1.books)
