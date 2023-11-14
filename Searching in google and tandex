@@ -1,0 +1,63 @@
+import webbrowser
+import os
+import sys
+import PyQt5;
+
+dirname = os.path.dirname(__file__);
+plugin_path = os.path.join(dirname, 'platforms');   os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path;
+from PyQt5.QtWidgets import QApplication, QFileDialog, QInputDialog;
+from PyQt5 import QtWidgets;
+from PyQt5.QtWidgets import QApplication, QMainWindow;
+
+
+class Window(QMainWindow):
+    def __init__(self):
+        super(Window, self).__init__() # создание окна
+        self.setWindowTitle("Кнопка")
+        self.setGeometry(500, 250, 550, 200)
+
+        self.edit = QtWidgets.QPlainTextEdit(self)  # создание текстового поля в конструкторе
+        self.edit.setToolTip("")
+        self.edit.setPlaceholderText("Просто поле")
+        self.edit.setGeometry(50, 50, 330, 40)
+        self.btn = QtWidgets.QPushButton(self)
+
+        self.btn.setText('Поиск')
+        self.btn.move(250, 100)
+        self.btn.adjustSize()
+        self.btn.clicked.connect(self.add_label)
+        self.btn.setEnabled(True)
+
+
+        self.comboBox = QtWidgets.QComboBox(self)  # создаем наш combobox
+        self.comboBox.setGeometry(150, 150, 231, 26)  # задаем параметры размеров и отступов
+        self.comboBox.setObjectName("comboBox")  # выдаем имя объекту
+        self.comboBox.addItem("")  # добавление элемента в спсисок
+        self.comboBox.addItem("")  # добавление элемента в спсисок
+
+        self.comboBox.setItemText(0, "Google")
+        self.comboBox.setItemText(1, "Yandex")
+
+
+
+    def add_label(self):
+        text = self.edit.toPlainText()
+        if self.comboBox.currentText() == "Yandex":
+            webbrowser.open(f'https://yandex.ru/search/?text={text}')
+        else:
+            webbrowser.open_new_tab(f'http://www.google.com//search?q={text}')
+
+       # text = self.edit.toPlainText()
+       # webbrowser.open(f'https://yandex.ru/search/?text={text}')
+        #webbrowser.open_new_tab(f'http://www.google.com//search?q={text}')
+
+
+def Application():
+    App = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(App.exec_())
+
+
+if __name__ == "__main__":
+    Application()
