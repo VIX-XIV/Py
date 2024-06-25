@@ -1,0 +1,123 @@
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+
+
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
+
+kv = Builder.load_file("my.kv")
+
+class MainWindow(Screen):
+
+
+    def open_popup(self):
+
+        popup = Popup(title='Test popup', content=Label(text='Hello world'),
+                      auto_dismiss=False)
+
+        content = Button(text='Close this popup', size_hint=(None, None), size=(400, 200),
+                         pos_hint={'x': 0.5, 'y': 0},
+                         font_size=40)
+
+        label = Label(
+            text='Это приложение служит для преобразования дней в: \n недели, часы, минуты, секунды и миллисекунды.',
+            size_hint=(None, None),
+            size=(800, 1000),
+            font_size=30)
+
+        content.add_widget(label)
+
+        popup = Popup(title='Explanation', content=content, auto_dismiss=False)
+        content.bind(on_release=popup.dismiss)
+
+        popup.open()
+
+    def Convert_nums(self):
+
+        self.input = ''
+
+        self.input = self.ids.text_input.text
+        self.ids.label_w.text = str(round(int(self.input) / 7, 2))
+
+        self.ids.label_h.text = str(int(self.input) * 24)
+        self.ids.label_m.text = str(int(self.input) * 1440)
+        self.ids.label_s.text = str(int(self.input) * 86400)
+        self.ids.label_ms.text = str(int(self.input) * 86400000)
+
+
+class SecondWindow(Screen):
+    def clear(self):
+        self.ids.calc_input.text = '0'
+
+    def button_press(self, button):
+        prior = self.ids.calc_input.text
+
+        if 'Нельзя!' in prior:
+            prior = ''
+
+        if prior == '0':
+            self.ids.calc_input.text = ''
+            self.ids.calc_input.text = f'{button}'
+        else:
+            self.ids.calc_input.text = f'{prior}{button}'
+
+    def dot(self):
+        prior = self.ids.calc_input.text
+        num_sum = prior.split('+')
+        num_min = prior.split('-')
+        num_mult = prior.split('*')
+        num_div = prior.split('/')
+
+
+        if '+' in prior and '.' not in num_sum[-1]:
+            prior = f'{prior}.'
+            self.ids.calc_input.text = prior
+        elif '-' in prior and '.' not in num_min[-1]:
+            prior = f'{prior}.'
+            self.ids.calc_input.text = prior
+        elif '*' in prior and '.' not in num_mult[-1]:
+            prior = f'{prior}.'
+            self.ids.calc_input.text = prior
+        elif '/' in prior and '.' not in num_div[-1]:
+            prior = f'{prior}.'
+            self.ids.calc_input.text = prior
+        elif '.' in prior:
+            pass
+        else:
+            prior = f'{prior}.'
+            self.ids.calc_input.text = prior
+
+    def math_sigh(self, sigh):
+        prior = self.ids.calc_input.text
+
+        self.ids.calc_input.text = f'{prior}{sigh}'
+
+
+    def equals(self):
+        prior = self.ids.calc_input.text
+        try:
+            answer = eval(prior)
+            self.ids.calc_input.text = str(answer)
+        except:
+            ZeroDivisionError
+            self.ids.calc_input.text = 'Нельзя!'
+
+
+class WindowManager(ScreenManager):
+    pass
+
+
+
+
+class MyMainApp(App):
+    def build(self):
+        kv = ScreenManager()
+        kv.add_widget(MainWindow(name='main'))
+        kv.add_widget(SecondWindow(name='second'))
+        return kv
+
+if __name__ == '__main__':
+    MyMainApp().run()
