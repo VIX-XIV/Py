@@ -1,0 +1,418 @@
+from kivy.factory import Factory
+from kivy.app import App
+from kivy.storage.jsonstore import JsonStore
+from kivy.uix.screenmanager import ScreenManager, Screen
+import json
+from kivy.uix.popup import Popup
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.camera import Camera
+import schedule
+import time
+from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
+import threading
+from kivy.clock import mainthread
+import psycopg2
+import pyaudio
+import wave
+
+class LoginWindow(Screen):
+    pass
+
+class MainWindow(Screen):
+    pass
+
+class SecondWindow(Screen):
+    pass
+
+class AnotherWindow(Screen):
+    pass
+
+class AlarmWindow(Screen):
+    pass
+
+class DbWindow(Screen):
+    pass
+
+class RecordingWindow(Screen):
+    pass
+
+class InputWindow(Screen):
+    pass
+
+class InfoWindow(Screen):
+    pass
+
+class WindowManager(ScreenManager):
+
+    def get_root_window(self):
+        self.n_w()
+
+    def n_w(self):
+        if self.ids.notes_display.readonly == False:
+            self.ids.notes_display.readonly = True
+            pass
+
+    def load(self):
+        try:
+            json_data = open('storage.json')
+            data = json.load(json_data)
+
+            for key, value in data.items():
+                self.ids.notes_display.text += key + '\n'
+
+                if self.ids.load_button.disabled == False:
+                    self.ids.load_button.disabled = True
+        except:
+            pass
+
+    def create(self):
+        if self.ids.note_input.text != "":
+            self.store = JsonStore('storage.json')
+        else:
+            pass
+
+        if self.ids.save_button.state == 'release':
+            self.ids.note_input.readonly = False
+        else:
+
+            try:
+                if self.ids.note_input.text in self.store:
+                    self.ids.note_input.text = ''
+                    self.ids.note_input.hint_text = 'Такая задача уже имеется!'
+                elif self.ids.note_input.text != '':
+                    self.store.put(self.ids.note_input.text)
+                    self.ids.notes_display.text += self.ids.note_input.text + '\n'
+                    self.ids.note_input.text = ''
+
+            except:
+                self.ids.note_input.hint_text = 'Напишите что-нибудь'
+
+    def delite(self):
+        try:
+            self.store = JsonStore('storage.json')
+            json_data = open('storage.json')
+            data = json.load(json_data)
+            self.ids.notes_display.text = ''
+            for key, value in data.items():
+                self.store.delete(key)
+        except:
+            pass
+        pass
+
+    def open_popup(self, dt):
+
+        content = Button(text='Скрыть', size_hint=(None, None), size=(750, 200),
+                         pos_hint={'x': 0.5, 'y': 0},
+                         font_size=40)
+
+        label = Label(
+            text='Реклама! Купи донат чтоб не доставала:)',
+            size_hint=(None, None),
+            size=(800, 1000),
+            font_size=30)
+
+        content.add_widget(label)
+
+        popup = Popup(title='Explanation', content=content, auto_dismiss=False)
+        content.bind(on_release=popup.dismiss)
+
+        popup.open()
+        pass
+
+    def open_popup_2(self):
+
+        content = Button(text='Скрыть', size_hint=(None, None), size=(750, 200),
+                         pos_hint={'x': 0.5, 'y': 0},
+                         font_size=40)
+
+        label = Label(
+            text='Реклама! Купи донат чтоб не доставала:)',
+            size_hint=(None, None),
+            size=(800, 1000),
+            font_size=30)
+
+        content.add_widget(label)
+
+        popup = Popup(title='Explanation', content=content, auto_dismiss=False)
+        content.bind(on_release=popup.dismiss)
+
+        popup.open()
+        pass
+
+    def forever_tim(self):
+        self.times = Clock.schedule_interval(self.open_popup, 3)
+
+
+    def bu_1(self):
+        self.times_1 = Clock.schedule_interval(self.open_popup, 5)
+
+    def bu_2(self):
+        self.times_2 = Clock.schedule_interval(self.open_popup, 15)
+
+    def my_callback(self):
+        if self.ids.b_300.state == 'down':
+            self.times.cancel()
+            self.ids.b_300.disabled = True
+            self.bu_1()
+        elif self.ids.b_1000.state == 'down':
+            if self.ids.b_300.disabled == True:
+                self.times_1.cancel()
+            self.times.cancel()
+            self.ids.b_1000.disabled = True
+            self.bu_2()
+        elif self.ids.b_10000.state == 'down':
+            if self.ids.b_300.disabled == True:
+                self.times_1.cancel()
+            if self.ids.b_1000.disabled == True:
+                self.times_2.cancel()
+            self.times.cancel()
+            self.ids.b_10000.disabled = True
+            # self.bu_3()
+        else:
+            self.forever_tim()
+            pass
+        pass
+
+
+    @mainthread
+    def music_func(self):
+        Factory.ConfirmPopup().open()
+        sound = SoundLoader.load('sound.mp3')
+        sound.play()
+
+    def off_func(self):
+        sound = SoundLoader.load('sound.mp3')
+        sound.stop()
+
+    def background_job(self):
+        try:
+            schedule.every().day.at(self.ids.text_alarm.text).do(self.music_func)
+
+            while True:
+                schedule.run_pending()
+                time.sleep(1)
+        except schedule.ScheduleValueError:
+            print('Пиши время! Пример: 12:00 или 22:00')
+
+
+    def alarm_func(self):
+
+        threading.Thread(target=self.background_job).start()
+
+        pass
+
+
+    def create_table(self):
+        conn = psycopg2.connect(database='todolist',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+        conn.autocommit = True
+
+
+        c.execute("""CREATE TABLE IF NOT EXISTS my_todo(
+                    id_notes serial PRIMARY KEY,
+                    notes varchar(50))
+                    """)
+        pass
+
+
+    def submit(self):
+        conn = psycopg2.connect(database='todolist',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+
+        sql_command = 'INSERT INTO my_todo (notes) VALUES (%s)'
+        values = (self.ids.db_text.text,)
+
+        c.execute(sql_command, values)
+
+        self.ids.db_label.text = f'{self.ids.db_text.text + ' added'}'
+
+        self.ids.db_text.text = ""
+
+        conn.commit()
+
+        conn.close()
+
+
+    def show_records(self):
+        conn = psycopg2.connect(database='todolist',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+        c.execute('SELECT * FROM my_todo')
+        records = c.fetchall()
+
+        word = ''
+
+        for record in records:
+            word = f'{word}\n{record[1]}'
+            self.ids.db_label.text = f'{word}'
+
+        conn.commit()
+
+        conn.close()
+
+
+    def start_recording(self):
+        CHUNK = 1024
+        FORMAT = pyaudio.paInt16
+        CHANNELS = 2
+        RATE = 44100
+        RECORD_SECONDS = 5
+        WAVE_OUTPUT_FILENAME = "output.wav"
+
+        p = pyaudio.PyAudio()
+
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK)
+
+        frames = []
+
+        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+            data = stream.read(CHUNK)
+            frames.append(data)
+
+        self.ids.rec_label.text = "* End of recording"
+
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+
+        wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+        wf.setnchannels(CHANNELS)
+        wf.setsampwidth(p.get_sample_size(FORMAT))
+        wf.setframerate(RATE)
+        wf.writeframes(b''.join(frames))
+        wf.close()
+        pass
+
+    def play_recording(self):
+        sound = SoundLoader.load('output.wav')
+
+        sound.play()
+        time.sleep(5)
+        sound.stop()
+
+    def disable_bt(self):
+        self.ids.input_button.disabled = True
+
+    def login_in(self):
+        if self.ids.login_input.text == 'ad' and self.ids.password_input.text == '123':
+            self.ids.login_lb.text = 'Правильно'
+            self.ids.input_button.disabled = False
+        else:
+            self.ids.login_lb.text = 'Неправильно'
+
+    def add_info(self):
+        conn = psycopg2.connect(database='postgres',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+
+        sql_commands = 'INSERT INTO conscript (full_name, birth_year, hometown, nation, category) VALUES (%s, %s, %s, %s, %s)'
+        value = (self.ids.fio_input.text, self.ids.birth_input.text, self.ids.ht_input.text, self.ids.nat_input.text,
+                 self.ids.cat_input.text,)
+
+        c.execute(sql_commands, value)
+
+        sql_commands_l = 'INSERT INTO users (login) VALUES (%s)'
+        value_log = (self.ids.log_input.text,)
+
+        c.execute(sql_commands_l, value_log)
+
+        conn.commit()
+
+        conn.close()
+
+    def show_conscripts(self):
+        conn = psycopg2.connect(database='postgres',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+        c.execute('SELECT * FROM conscript')
+        records = c.fetchall()
+
+        word = ''
+
+        for record in records:
+            word = f'{word}\n{record[1:6]}'
+            self.ids.inform_label.text = f'ФИО, Год рождения, Родной город, Гражданство, Категория: \n{word}'
+
+        conn.commit()
+
+        conn.close()
+
+    def on_cam(self):
+        Camera(play=True, index=1, resolution=(640, 480))
+
+class MyApp(App):
+    def build(self):
+        conn = psycopg2.connect(database='postgres',
+                                user='postgres',
+                                password='123',
+                                )
+
+        c = conn.cursor()
+
+        conn.autocommit = True
+
+        sql = "CREATE DATABASE todolist"
+
+        # c.execute(sql)
+
+        c.execute("""CREATE TABLE IF NOT EXISTS my_todo(
+            id_notes serial PRIMARY KEY,
+            notes varchar(50))
+            """)
+
+        c.execute("""CREATE TABLE IF NOT EXISTS users(
+                    id_users serial PRIMARY KEY,
+                    login varchar(50) NOT NULL UNIQUE,
+                    password varchar(20))
+                    """)
+
+        c.execute("""CREATE TABLE IF NOT EXISTS conscript(
+                    id_conscript serial PRIMARY KEY,
+                    full_name varchar(50) NOT NULL,
+                    birth_year varchar(20) NOT NULL,
+                    hometown varchar(20) NOT NULL,
+                    nation varchar(20) NOT NULL,
+                    category varchar(20) NOT NULL,
+                    id_users_fk INT REFERENCES users(id_users))
+                    """)
+
+
+        conn.close()
+        c.close()
+
+        wind = WindowManager()
+        wind.my_callback()
+        wind.disable_bt()
+
+        return wind
+
+if __name__ == "__main__":
+    MyApp().run()
