@@ -1,0 +1,408 @@
+#: import Factory kivy.factory.Factory
+<ConfirmPopup@Popup>
+    auto_dismiss: False
+    title: 'Будильник'
+    BoxLayout:
+        orientation: 'vertical'
+
+
+        Label:
+            auto_dismiss: False
+            text: "Будильник, Просыпайся!"
+            font_size: 40
+
+
+        Button:
+            id: stop_button
+            text: 'Остановить'
+            font_size: 40
+            on_release:
+                root.dismiss(), Factory.WindowManager().off_func()
+
+
+<WindowManager>:
+
+    LoginWindow:
+        name: 'screen0'
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                id: login_lb
+                text: 'Вход в приложение'
+                font_size: 40
+
+            TextInput:
+                id: login_input
+                hint_text: 'Введите логин'
+    	        size_hint: 1, 0.4
+    	        font_size: 30
+
+    	    TextInput:
+                id: password_input
+                hint_text: 'Введите пароль'
+    	        size_hint: 1, 0.4
+    	        font_size: 30
+
+    	    Button:
+        	    id: check_button
+            	size_hint: 1, 0.4
+            	text: 'Проверка'
+            	font_size: 20
+            	on_press:
+            	    root.login_in()
+            
+            Button:
+        	    id: input_button
+            	size_hint: 1, 0.4
+            	text: 'Войти'
+            	font_size: 20
+            	on_press:
+            	    root.current = 'screen1'
+
+
+    MainWindow:
+        name: 'screen1'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            TextInput:
+                id: note_input
+                hint_text: 'Введите заметку'
+    	        size_hint: 1, 0.4
+    	        font_size: 30
+
+            FloatLayout:
+
+                BoxLayout:
+        	        orientation: 'vertical'
+
+        	        Button:
+        	            id: save_button
+            	        size_hint: 1, 0.4
+            	        text: 'Сохранить'
+            	        font_size: 20
+            	        on_press:
+            	            root.create()
+
+            	    Button:
+        	            id: load_button
+            	        size_hint: 1, 0.4
+            	        text: 'Загрузить список'
+            	        font_size: 20
+            	        on_press:
+            	            root.load()
+
+                    Button:
+            	        size_hint: 1, 0.4
+            	        text: 'Список дел'
+            	        font_size: 20
+            	        on_release:
+                            root.current = 'screen2'
+
+                    Button:
+                        id: del_button
+            	        size_hint: 1, 0.3
+            	        text: 'Удалить все'
+            	        font_size: 20
+            	        on_press:
+            	            root.delite()
+
+            	    Button:
+                        id: donate_button
+            	        size_hint: 1, 0.3
+            	        text: 'ДОНАТ'
+            	        font_size: 20
+            	        on_press:
+            	            root.current = 'screen3'
+
+            	    Button:
+            	        size_hint: 1, 0.3
+            	        text: 'Будильник'
+            	        font_size: 20
+            	        on_press:
+            	            root.current = 'screen4'
+
+            	    Button:
+            	        size_hint: 1, 0.3
+            	        text: 'БД заметки'
+            	        font_size: 20
+            	        on_press:
+            	            root.current = 'screen5'
+
+            	    Button:
+                        text: 'Запись'
+                        font_size: 20
+                        size_hint: (1, 0.5)
+                        on_release:
+                            root.current = 'screen6'
+
+                    Button:
+                        text: 'Заполнение информации'
+                        font_size: 20
+                        size_hint: (1, 0.5)
+                        on_release:
+                            root.current = 'screen7'
+
+                    Button:
+                        text: 'Призывники'
+                        font_size: 20
+                        size_hint: (1, 0.5)
+                        on_release:
+                            root.current = 'screen8'
+
+
+    SecondWindow:
+        name: 'screen2'
+        BoxLayout:
+            id: box
+            orientation: 'vertical'
+
+        TextInput:
+            id: notes_display
+            hint_text: 'Тут будут заметки'
+            font_size: 30
+
+        Button:
+            text: 'Назад'
+            size_hint: 1, 0.6
+            font_size: 30
+            on_release:
+                root.current = 'screen1'
+
+    AnotherWindow:
+        name: 'screen3'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            Label:
+                text: 'ДОНАТ'
+                size_hint: 1, 0.2
+                font_size: 40
+
+            Button:
+                id: b_300
+                size_hint: 1, 0.2
+                text: '300 Рублей'
+                font_size: 20
+                on_press:
+                    root.my_callback()
+
+            Button:
+                id: b_1000
+                size_hint: 1, 0.2
+                text: '1000 рублей'
+                font_size: 20
+                on_press:
+                    root.my_callback()
+
+            Button:
+                id: b_10000
+                size_hint: 1, 0.2
+                text: '10000 рублей'
+                font_size: 20
+                on_press:
+                    root.my_callback()
+
+            Button:
+                size_hint: 1, 0.2
+                text: 'Назад'
+                font_size: 20
+                on_press:
+                    root.current = 'screen1'
+
+
+    AlarmWindow:
+        name: 'screen4'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            Label:
+                text: 'Будильник'
+                font_size: 60
+                size_hint: (1, 0.2)
+                color: (1, 1, 0, 1)
+
+            TextInput:
+                id: text_alarm
+                size_hint: (1, 0.5)
+                font_size: 40
+
+            Button:
+                id: alarm_button
+                text: 'Завести'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.alarm_func()
+
+            Button:
+                text: 'Назад'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.current = 'screen1'
+
+    DbWindow:
+        name: 'screen5'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            Label:
+                id: db_label
+                text: ''
+                font_size: 20
+                size_hint: (1, 0.5)
+                color: (1, 1, 0, 1)
+
+            TextInput:
+                id: db_text
+                size_hint: (1, 0.3)
+                font_size: 40
+
+            Button:
+                text: 'Создать таблицу (my_todo)'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.create_table()
+
+            Button:
+                text: 'Добавить заметку'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.submit()
+
+            Button:
+                text: 'Показать заметки'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.show_records()
+
+            Button:
+                text: 'Назад'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.current = 'screen1'
+
+    RecordingWindow:
+        name: 'screen6'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            Label:
+                id: rec_label
+                text: ''
+                font_size: 20
+                size_hint: (1, 0.5)
+                color: (1, 1, 0, 1)
+
+            Button:
+                text: 'Начать запись'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.start_recording()
+
+            Button:
+                text: 'Воспроизвести запись'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.play_recording()
+            Button:
+                text: 'Назад'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.current = 'screen1'
+
+    InputWindow:
+        name: 'screen7'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            TextInput:
+                id: fio_input
+                hint_text: 'Введите ФИО'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            TextInput:
+                id: birth_input
+                hint_text: 'Введите год рождения'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            TextInput:
+                id: ht_input
+                hint_text: 'Введите родной город'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            TextInput:
+                id: nat_input
+                hint_text: 'Введите гражданство'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            TextInput:
+                id: cat_input
+                hint_text: 'Введите категорию'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            TextInput:
+                id: log_input
+                hint_text: 'Введите логин'
+                font_size: 20
+                size_hint: (1, 0.5)
+
+            Button:
+                text: 'Заполнить'
+                font_size: 40
+                size_hint: (1, 0.6)
+                on_release:
+                    root.add_info()
+
+            Button:
+                text: 'Назад'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.current = 'screen1'
+
+    InfoWindow:
+        name: 'screen8'
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                id: inform_label
+                font_size: 20
+                size_hint: (1, 0.5)
+                color: (1, 1, 0, 1)
+
+            Button:
+                text: 'Камера вкл'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.on_cam()
+
+            Button:
+                text: 'Загрузить список'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.show_conscripts()
+
+            Button:
+                text: 'Назад'
+                font_size: 40
+                size_hint: (1, 0.5)
+                on_release:
+                    root.current = 'screen1'
