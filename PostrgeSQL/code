@@ -1,0 +1,119 @@
+import psycopg2
+
+try:
+    connection = psycopg2.connect(database='Sem_7_8',
+                            user='postgres',
+                            password='123')
+    connection.autocommit = True
+
+    # def create_table():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """CREATE TABLE clients(
+    #             id serial PRIMARY KEY,
+    #             first_name varchar(50) NOT NULL,
+    #             last_name varchar(50) NOT NULL,
+    #             email varchar(50) NOT NULL,
+    #             number varchar(50));"""
+    #         )
+    #         return cursor.execute
+    # create = create_table()
+    # print(f'Table was {create} successfully')
+
+    # def func_insert():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """INSERT INTO clients (first_name, last_name, email, number) VALUES
+    #             ('Alex', 'Stalker', 'alex.stalker.1994@mail.ru', '+1234567'),
+    #             ('Max', 'Payne', 'mx.pain.1974@mail.ru', '+140539449');"""
+    #         )
+    #         return cursor.execute
+    # ins = func_insert()
+    # print(f'DATA from {ins} was successfully inserted')
+
+    # def func_add():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """INSERT INTO clients (first_name, last_name, email, number) VALUES
+    #                  ('Sasha', 'Mizulin', 'al.dy.1996@mail.ru', '+78005553555');"""
+    #              )
+    #         return cursor.execute
+    # add = func_add()
+    # print(f'A new client was successfully added')
+
+    # def func_update_numb():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """UPDATE clients SET number=%s WHERE id=%s;
+    #             """, ('+9111111', 2)
+    #              )
+    #         return cursor.execute
+    # add = func_update_numb()
+    # print(f'A new phone number was successfully updated')
+
+    # def func_add_any_inf():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """UPDATE clients SET first_name=%s, last_name=%s, email=%s, number=%s WHERE id=%s;
+    #             """, ('Ashley', 'Dizord', 'al.dy.1996@mail.ru', '', 1)
+    #              )
+    #         cursor.execute(
+    #             """SELECT * FROM clients;
+    #             """
+    #         )
+    #         return cursor.execute
+    # add = func_add_any_inf()
+    # print(f'A new information was successfully updated')
+
+    # def func_del_numb():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """UPDATE clients SET number=%s WHERE id=%s;
+    #             """, ('', 2)
+    #              )
+    #         cursor.execute(
+    #                     """SELECT * FROM clients;
+    #                     """
+    #                 )
+    #         return cursor.fetchall()
+    # delite_numb = func_del_numb()
+    # print(f'A number information was successfully deleted\n', delite_numb)
+
+    # def func_del_clients():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """DELETE FROM clients WHERE id=%s;
+    #             """, (1,)
+    #              )
+    #         cursor.execute("""
+    #         SELECT * FROM clients;
+    #         """)
+    #         return cursor.fetchall()
+    #
+    # print(f'A client was successfully deleted')
+    # del_t = func_del_clients()
+    # print(f'Table: {del_t}')
+
+    # def func_fetch():
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(
+    #             """SELECT * FROM clients WHERE first_name='{}';
+    #             """.format('Max')
+    #         )
+    #         return cursor.fetchone()
+    # fetch = func_fetch()
+    # print('INFO: ', fetch)
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute(
+    #         """DROP TABLE clients;"""
+    #     )
+    #     print('Table was deleted')
+
+except Exception as _ex:
+    print('Error while working with PostgreSQL', _ex)
+finally:
+    if connection:
+        #cursor.close()
+        connection.close()
+        print('PostgreSQL connection closed')
