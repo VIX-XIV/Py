@@ -1,0 +1,76 @@
+from kivy.app import App
+from kivy.storage.jsonstore import JsonStore
+from kivy.uix.screenmanager import ScreenManager, Screen
+import json
+
+class MainWindow(Screen):
+    pass
+
+class SecondWindow(Screen):
+    pass
+
+class WindowManager(ScreenManager):
+
+    def get_root_window(self):
+        self.n_w()
+
+    def n_w(self):
+        if self.ids.notes_display.readonly == False:
+            self.ids.notes_display.readonly = True
+            pass
+
+    def load(self):
+        try:
+            json_data = open('storage.json')
+            data = json.load(json_data)
+
+            for key, value in data.items():
+                self.ids.notes_display.text += key + '\n'
+
+                if self.ids.load_button.disabled == False:
+                    self.ids.load_button.disabled = True
+        except:
+            pass
+
+    def create(self):
+        if self.ids.note_input.text != "":
+            self.store = JsonStore('storage.json')
+        else:
+            pass
+
+        if self.ids.save_button.state == 'release':
+            self.ids.note_input.readonly = False
+        else:
+
+            try:
+                if self.ids.note_input.text in self.store:
+                    self.ids.note_input.text = ''
+                    self.ids.note_input.hint_text = 'Такая задача уже имеется!'
+                elif self.ids.note_input.text != '':
+                    self.store.put(self.ids.note_input.text)
+                    self.ids.notes_display.text += self.ids.note_input.text + '\n'
+                    self.ids.note_input.text = ''
+
+            except:
+                self.ids.note_input.hint_text = 'Напишите что-нибудь'
+
+    def delite(self):
+        try:
+            self.store = JsonStore('storage.json')
+            json_data = open('storage.json')
+            data = json.load(json_data)
+            self.ids.notes_display.text = ''
+            for key, value in data.items():
+                self.store.delete(key)
+        except:
+            pass
+        pass
+
+
+class MyApp(App):
+    def build(self):
+
+        return WindowManager()
+
+if __name__ == "__main__":
+    MyApp().run()
