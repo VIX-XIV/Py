@@ -1,0 +1,64 @@
+<WindowManager>:
+    MainWindow:
+        name: 'screen1'
+        BoxLayout:
+	        orientation: 'vertical'
+
+            TextInput:
+                id: note_input
+                hint_text: 'Введите заметку'
+    	        size_hint: 1, 0.4
+    	        font_size: 30
+
+            FloatLayout:
+
+                BoxLayout:
+        	        orientation: 'vertical'
+
+        	        Button:
+        	            id: save_button
+            	        size_hint: 1, 0.4
+            	        text: 'Сохранить'
+            	        font_size: 20
+            	        on_press:
+            	            root.create()
+
+            	    Button:
+        	            id: load_button
+            	        size_hint: 1, 0.4
+            	        text: 'Загрузить список'
+            	        font_size: 20
+            	        on_press:
+            	            root.load()
+
+                    Button:
+            	        size_hint: 1, 0.4
+            	        text: 'Список дел'
+            	        font_size: 20
+            	        on_release:
+                            root.current = 'screen2'
+
+                    Button:
+                        id: del_button
+            	        size_hint: 1, 0.3
+            	        text: 'Удалить все'
+            	        font_size: 20
+            	        on_press:
+            	            root.delite()
+    SecondWindow:
+        name: 'screen2'
+        BoxLayout:
+            id: box
+            orientation: 'vertical'
+
+        TextInput:
+            id: notes_display
+            hint_text: 'Тут будут заметки'
+            font_size: 30
+
+        Button:
+            text: 'Назад'
+            size_hint: 1, 0.6
+            readonly: True
+            on_release:
+                root.current = 'screen1'
